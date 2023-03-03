@@ -1,0 +1,30 @@
+{
+  "name": "dendreo-test",
+  "version": "1.0.0",
+  "description": "tests techniques frontend Dendreo",
+  "private": true,
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "npx parcel src/index.html"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vuzonp/dendreo-test.git"
+  },
+  "author": "vuzonp",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/vuzonp/dendreo-test/issues"
+  },
+  "homepage": "https://github.com/vuzonp/dendreo-test#readme",
+  "devDependencies": {
+    "@parcel/transformer-sass": "^2.8.3",
+    "parcel": "^2.8.3",
+    "postcss": "^8.4.21",
+    "tailwindcss": "^3.2.7"
+  },
+  "dependencies": {
+    "jquery": "^3.6.3"
+  }
+}

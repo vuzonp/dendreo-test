@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dendreo POC - utilisateurs / créneaux</title>
+    <link rel="stylesheet" href="./styles/index.css" />
+  </head>
+  <body>
+    <main class="container">
+      <h1 class="font-bold">Dendreo POC Planning</h1>
+      <p>Test technique Dendreo pour gérer un planning de participants et de créneaux.</p>
+      <p><a class="text-cyan-700 underline" href="https://github.com/vuzonp/dendreo-test">Accéder au code source sur Github</a></p>
+      <hr class="mt-6 mb-6">
+
+      <div class="planning-wrapper flex flex-col md:flex-row">
+        <!-- participants -->
+        <section class="participants-wrapper basis-1/2 md:basis-5/12" id="participants">
+          <h2 class="sr-only">Participants</h2>
+          <table class="participants-list table-fixed w-full border-collapse border-spacing-2 border border-slate-200 text-sm">
+            <thead>
+              <tr>
+                <th class="border border-slate-300 p-2">
+                  Nom
+                </th>
+                <th class="border border-slate-300 p-2">
+                  Présences
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="participant" data-participant-id="c0">
+                <td class="border border-slate-300 p-2">
+                  <span class="participant-name">Participant 1</span>
+                </td>
+                <td class="border border-slate-300 p-2">
+                  <div class="participant-slots--counter">
+                    <span class="participant-slots_count">?</span> participations
+                  </div>
+                  <div class="participant-slots--actions hidden">
+                    <input type="checkbox" class="action" name="participant-action" checked>
+                  </div>
+                </td>
+              </tr>
+              <tr class="participant" data-participant-id="c1">
+                <td class="border border-slate-300 p-2" >
+                  <span class="participant-name">Participant 2</span>
+                </td>
+                <td class="border border-slate-300 p-2">
+                  <div class="participant-slots--counter">
+                    <span class="participant-slots_count">?</span> participations
+                  </div>
+                  <div class="participant-slots--actions hidden">
+                    <input type="checkbox" class="action" name="participant-action" checked>
+                  </div>
+                </td>
+              </tr>
+              <tr class="participant" data-participant-id="c2">
+                <td class="border border-slate-300 p-2" >
+                  <span class="participant-name">Participant 2</span>
+                </td>
+                <td class="border border-slate-300 p-2">
+                  <div class="participant-slots--counter">
+                    <span class="participant-slots_count">?</span> participations
+                  </div>
+                  <div class="participant-slots--actions hidden">
+                    <input type="checkbox" class="action" name="participant-action" checked>
+                  </div>
+                </td>
+              </tr>
+              <tr class="participant" data-participant-id="c3">
+                <td class="border border-slate-300 p-2" >
+                  <span class="participant-name">Participant 2</span>
+                </td>
+                <td class="border border-slate-300 p-2">
+                  <div class="participant-slots--counter">
+                    <span class="participant-slots_count">?</span> participations
+                  </div>
+                  <div class="participant-slots--actions hidden">
+                    <input type="checkbox" class="action" name="participant-action" checked>
+                  </div>
+                </td>
+              </tr>
+              <tr class="participant" data-participant-id="c4">
+                <td class="border border-slate-300 p-2" >
+                  <span class="participant-name">Participant 2</span>
+                </td>
+                <td class="border border-slate-300 p-2">
+                  <div class="participant-slots--counter">
+                    <span class="participant-slots_count">?</span> participations
+                  </div>
+                  <div class="participant-slots--actions hidden">
+                    <input type="checkbox" class="action" name="participant-action" checked>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+        <!-- /participants -->
+
+        <div class="hidden md:block md:basis-2/12 "></div>
+
+        <!-- Slots -->
+        <section class="time-slot-wrapper basis-1/2 lg:basis-5/12" id="timeSlots">
+          <h2 class="sr-only">Créneaux</h2>
+          <table class="slots-list table-fixed w-full border-collapse border-spacing-2 border border-slate-200 text-sm">
+            <thead>
+              <tr>
+                <th class="border border-slate-300 p-2">
+                  Nom
+                </th>
+                <th class="border border-slate-300 p-2">
+                  Participants
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="slot" data-slot-id="s0">
+                <td class="border border-slate-300 p-2">
+                  <span class="slot-name">Créneau A</span>
+                </td>
+                <td class="border border-slate-300 p-2">
+                  <div class="slot-participants--counter">
+                    <span class="slot-participants_count">?</span> participant(s)
+                  </div>
+                  <div class="hidden slot-participants--actions">
+                    <input type="checkbox" class="action" checked>
+                  </div>
+                </td>
+              </tr>
+              <tr class="slot" data-slot-id="s1">
+                <td class="border border-slate-300 p-2">
+                  <span class="slot-name">Créneau B</span>
+                </td>
+                <td class="border border-slate-300 p-2">
+                  <div class="slot-participants--counter">
+                    <span class="slot-participants_count">?</span> participant(s)
+                  </div>
+                  <div class="hidden slot-participants--actions">
+                    <input type="checkbox" class="action" checked>
+                  </div>
+                </td>
+              </tr>
+              <tr class="slot" data-slot-id="s2">
+                <td class="border border-slate-300 p-2">
+                  <span class="slot-name">Créneau C</span>
+                </td>
+                <td class="border border-slate-300 p-2">
+                  <div class="slot-participants--counter">
+                    <span class="slot-participants_count">?</span> participant(s)
+                  </div>
+                  <div class="hidden slot-participants--actions">
+                    <input type="checkbox" class="action" checked>
+                  </div>
+                </td>
+              </tr>
+              <tr class="slot" data-slot-id="s3">
+                <td class="border border-slate-300 p-2">
+                  <span class="slot-name">Créneau D</span>
+                </td>
+                <td class="border border-slate-300 p-2">
+                  <div class="slot-participants--counter">
+                    <span class="slot-participants_count">?</span> participant(s)
+                  </div>
+                  <div class="hidden slot-participants--actions">
+                    <input type="checkbox" class="action" checked>
+                  </div>
+                </td>
+              </tr>
+              <tr class="slot" data-slot-id="s4">
+                <td class="border border-slate-300 p-2">
+                  <span class="slot-name">Créneau E</span>
+                </td>
+                <td class="border border-slate-300 p-2">
+                  <div class="slot-participants--counter">
+                    <span class="slot-participants_count">?</span> participant(s)
+                  </div>
+                  <div class="hidden slot-participants--actions">
+                    <input type="checkbox" class="action" checked>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+        <!-- /Slots-->
+
+      </div>
+
+    </main>
+    <script src="main.js" type="module"></script>
+  </body>
+</html>
