@@ -1,4 +1,5 @@
 import * as $ from "jquery";
+import { ShapeDivider } from "./lib/shape-divider";
 
 // Setups the data
 //---------------------------------------------------------------------
@@ -9,6 +10,9 @@ const slotsData = new Map([
   ["s2", new Set(["c3", "c4"])],
   ["s3", new Set(["c0", "c1", "c2", "c3"])],
   ["s4", new Set(["c2", "c3", "c4"])],
+  ["s5", new Set(["c2", "c1", "c4"])],
+  ["s6", new Set(["c0", "c3", "c2"])],
+  ["s7", new Set(["c2", "c0", "c1"])],
 ]);
 
 const participantsData = (function (slotsData) {
@@ -32,6 +36,9 @@ const participantsData = (function (slotsData) {
 //---------------------------------------------------------------------
 
 $(function () {
+  const $participantsList = $(".participants-list");
+  const $slotsList = $(".slots-list");
+
   // Propagates data to view
   //-----------------------
 
@@ -52,12 +59,37 @@ $(function () {
     $slot.find(".slot-participants_count").text(counter);
   });
 
+  // Prepares the shape
+  //-------------------
+  const shapeDividerElement = document.getElementById("shape-divider");
+  const shapeDivider = new ShapeDivider(shapeDividerElement);
+
+  /**
+   * Redraws the svg between tables in updating the points position.
+   * @param {Jquery<HTMLElement>} $toItem
+   */
+  const displayDividerShape = function ($toItem) {
+    if ($.contains($slotsList[0], $toItem[0])) {
+      const bY = $toItem.position().top;
+      const cY = bY + $toItem.height();
+      shapeDivider.setDynamicPositions(bY, cY, $participantsList.height());
+      shapeDivider.draw();
+      shapeDivider.flipToLeft();
+    } else {
+      const bY = $toItem.position().top;
+      const cY = bY + $toItem.height();
+      shapeDivider.setDynamicPositions(bY, cY, $slotsList.height());
+      shapeDivider.draw();
+      shapeDivider.flipToRight();
+    }
+  };
+
   // Handles communication between tables
-  //-------------------------------------------------------------------
+  //--------------------------------------
   const displaySlotsOfParticipant = function (participant$) {
     const participantId = participant$.attr("data-participant-id");
 
-    // Switch the slot view:
+    // It switches the slot view:
     $(".slot").each(function () {
       const $slot = $(this);
       const $slotAction = $slot.find(".slot-participants--actions");
@@ -72,7 +104,7 @@ $(function () {
         $slotAction.find("input").removeAttr("checked");
       }
 
-      // Toggle the slot view
+      // Toggles the slot view
       $slotCounter.hide();
       $slotAction.show();
     });
@@ -81,7 +113,7 @@ $(function () {
   const displayParticipantsOfSlot = function (slot$) {
     const slotId = slot$.attr("data-slot-id");
 
-    // Switch the slot view:
+    // It switches the participants view:
     $(".participant").each(function () {
       const $participant = $(this);
 
@@ -103,7 +135,7 @@ $(function () {
         $participantAction.find("input").removeAttr("checked");
       }
 
-      // Toggle the slot view
+      // Toggles the slot view
       $participantCounter.hide();
       $participantAction.show();
     });
@@ -112,24 +144,38 @@ $(function () {
   // Listeners
 
   // Toggles the slots table with data of a single participant on hover
-  $(".participants-list")
+  $participantsList
     .on("mouseenter", ".participant", function () {
+      // Displays the slots of the participant.
       const $participant = $(this);
       displaySlotsOfParticipant($participant);
+
+      // Draws the svg divider.
+      $(shapeDividerElement).show();
+      displayDividerShape($participant);
     })
     .on("mouseleave", ".participant", function () {
+      // Resets the view.
       $(".slot-participants--actions").hide();
       $(".slot-participants--counter").show();
+      $(shapeDividerElement).hide();
     });
 
   // Toggles the participants table with data of a single slot on hover
-  $(".slots-list")
+  $slotsList
     .on("mouseenter", ".slot", function () {
+      // Displays the participants of the slot:
       const $slot = $(this);
       displayParticipantsOfSlot($slot);
+
+      // Draws the svg divider:
+      $(shapeDividerElement).show();
+      displayDividerShape($slot);
     })
     .on("mouseleave", ".slot", function () {
+      // Resets the view.
       $(".participant-slots--actions").hide();
       $(".participant-slots--counter").show();
+      $(shapeDividerElement).hide();
     });
 });
