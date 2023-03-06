@@ -15,7 +15,8 @@
       <hr class="mt-6 mb-6">
 
       <div class="planning-wrapper flex flex-col md:flex-row">
-        <!-- participants -->
+        
+        <!-- Participants -->
         <section class="participants-wrapper basis-1/2 md:basis-5/12" id="participants">
           <h2 class="sr-only">Participants</h2>
           <table class="participants-list table-fixed w-full border-collapse border-spacing-2 border border-slate-200 text-sm">
@@ -30,7 +31,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr class="participant" data-participant-id="c0">
+              <tr class="participant hover:bg-sky-200" data-participant-id="c0">
                 <td class="border border-slate-300 p-2">
                   <span class="participant-name">Participant 1</span>
                 </td>
@@ -43,7 +44,7 @@
                   </div>
                 </td>
               </tr>
-              <tr class="participant" data-participant-id="c1">
+              <tr class="participant hover:bg-sky-200" data-participant-id="c1">
                 <td class="border border-slate-300 p-2" >
                   <span class="participant-name">Participant 2</span>
                 </td>
@@ -56,7 +57,7 @@
                   </div>
                 </td>
               </tr>
-              <tr class="participant" data-participant-id="c2">
+              <tr class="participant hover:bg-sky-200" data-participant-id="c2">
                 <td class="border border-slate-300 p-2" >
                   <span class="participant-name">Participant 2</span>
                 </td>
@@ -69,7 +70,7 @@
                   </div>
                 </td>
               </tr>
-              <tr class="participant" data-participant-id="c3">
+              <tr class="participant hover:bg-sky-200" data-participant-id="c3">
                 <td class="border border-slate-300 p-2" >
                   <span class="participant-name">Participant 2</span>
                 </td>
@@ -82,7 +83,7 @@
                   </div>
                 </td>
               </tr>
-              <tr class="participant" data-participant-id="c4">
+              <tr class="participant hover:bg-sky-200" data-participant-id="c4">
                 <td class="border border-slate-300 p-2" >
                   <span class="participant-name">Participant 2</span>
                 </td>
@@ -98,9 +99,20 @@
             </tbody>
           </table>
         </section>
-        <!-- /participants -->
+        <!-- /Participants -->
 
-        <div class="hidden md:block md:basis-2/12 "></div>
+        <!-- Shape divider -->
+        <div class="hidden md:block md:basis-2/12" aria-hidden="true">
+          <svg width="100%" height="100%" viewBox="0 0 118 223" id="shape-divider" >
+            <path
+              fill="rgb(224 242 254)"
+              class="hidden"
+              d="M 0 0 C 43 0 50 45 100 45 L 100 55 C 50 55 45 100 0 100 Z"
+              />
+          </svg>
+        </div>
+        <div class="h-6 md:hidden">&nbsp;</div>
+        <!-- /Shape divider -->
 
         <!-- Slots -->
         <section class="time-slot-wrapper basis-1/2 lg:basis-5/12" id="timeSlots">
@@ -117,7 +129,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr class="slot" data-slot-id="s0">
+              <tr class="slot hover:bg-sky-200" data-slot-id="s0">
                 <td class="border border-slate-300 p-2">
                   <span class="slot-name">Créneau A</span>
                 </td>
@@ -130,7 +142,7 @@
                   </div>
                 </td>
               </tr>
-              <tr class="slot" data-slot-id="s1">
+              <tr class="slot hover:bg-sky-200" data-slot-id="s1">
                 <td class="border border-slate-300 p-2">
                   <span class="slot-name">Créneau B</span>
                 </td>
@@ -143,7 +155,7 @@
                   </div>
                 </td>
               </tr>
-              <tr class="slot" data-slot-id="s2">
+              <tr class="slot hover:bg-sky-200" data-slot-id="s2">
                 <td class="border border-slate-300 p-2">
                   <span class="slot-name">Créneau C</span>
                 </td>
@@ -156,7 +168,7 @@
                   </div>
                 </td>
               </tr>
-              <tr class="slot" data-slot-id="s3">
+              <tr class="slot hover:bg-sky-200" data-slot-id="s3">
                 <td class="border border-slate-300 p-2">
                   <span class="slot-name">Créneau D</span>
                 </td>
@@ -169,9 +181,48 @@
                   </div>
                 </td>
               </tr>
-              <tr class="slot" data-slot-id="s4">
+              <tr class="slot hover:bg-sky-200" data-slot-id="s4">
                 <td class="border border-slate-300 p-2">
                   <span class="slot-name">Créneau E</span>
+                </td>
+                <td class="border border-slate-300 p-2">
+                  <div class="slot-participants--counter">
+                    <span class="slot-participants_count">?</span> participant(s)
+                  </div>
+                  <div class="hidden slot-participants--actions">
+                    <input type="checkbox" class="action" checked>
+                  </div>
+                </td>
+              </tr>
+              <tr class="slot hover:bg-sky-200" data-slot-id="s5">
+                <td class="border border-slate-300 p-2">
+                  <span class="slot-name">Créneau F</span>
+                </td>
+                <td class="border border-slate-300 p-2">
+                  <div class="slot-participants--counter">
+                    <span class="slot-participants_count">?</span> participant(s)
+                  </div>
+                  <div class="hidden slot-participants--actions">
+                    <input type="checkbox" class="action" checked>
+                  </div>
+                </td>
+              </tr>
+              <tr class="slot hover:bg-sky-200" data-slot-id="s6">
+                <td class="border border-slate-300 p-2">
+                  <span class="slot-name">Créneau F</span>
+                </td>
+                <td class="border border-slate-300 p-2">
+                  <div class="slot-participants--counter">
+                    <span class="slot-participants_count">?</span> participant(s)
+                  </div>
+                  <div class="hidden slot-participants--actions">
+                    <input type="checkbox" class="action" checked>
+                  </div>
+                </td>
+              </tr>
+              <tr class="slot hover:bg-sky-200" data-slot-id="s7">
+                <td class="border border-slate-300 p-2">
+                  <span class="slot-name">Créneau F</span>
                 </td>
                 <td class="border border-slate-300 p-2">
                   <div class="slot-participants--counter">
