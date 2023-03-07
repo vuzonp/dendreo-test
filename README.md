@@ -1,9 +1,8 @@
 # Test technique pour Dendreo
-![image](https://user-images.githubusercontent.com/1331250/223232003-e7d5feb7-a310-4537-8d21-024a69db8646.png)
+![image](https://user-images.githubusercontent.com/1331250/223573428-88819624-e6c7-401f-8886-ed041b9f7d45.png)
+![image](https://user-images.githubusercontent.com/1331250/223573460-15c1f0cf-6e25-493e-becc-098e774b4f84.png)
+![image](https://user-images.githubusercontent.com/1331250/223573492-c8d435ed-5093-46ee-bc0c-f75e4d8fcd2d.png)
 
-![image](https://user-images.githubusercontent.com/1331250/223231874-89dddc2f-47a0-46d2-99fc-ea6b66c73eeb.png)
-
-![image](https://user-images.githubusercontent.com/1331250/223232092-32dd1e22-73a0-4ca5-a9fd-c946eed9d718.png)
 
 
 ## Installation
