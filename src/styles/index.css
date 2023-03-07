@@ -6,3 +6,22 @@
   left: -100vw;
   position: absolute;
 }
+
+.hovered {
+  background-color: rgb(186 230 253);
+  fill: rgb(224 242 254);
+}
+
+.reset-area {
+  position: fixed;
+  z-index: 2;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+}
+
+main {
+  position: relative;
+  z-index: 10 !important;
+}

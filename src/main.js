@@ -1,8 +1,13 @@
 import * as $ from "jquery";
 import { ShapeDivider } from "./lib/shape-divider";
+import { SlotsManager } from "./lib/slots-manager";
 
 // Setups the data
 //---------------------------------------------------------------------
+
+const LOCK_PARTICIPANTS = "participants";
+const LOCK_SLOTS = "slots";
+const UNLOCKED = "";
 
 const slotsData = new Map([
   ["s0", new Set(["c1", "c2", "c4"])],
@@ -14,23 +19,30 @@ const slotsData = new Map([
   ["s6", new Set(["c0", "c3", "c2"])],
   ["s7", new Set(["c2", "c0", "c1"])],
 ]);
+const slotsManager = new SlotsManager(slotsData);
+let lockedState = UNLOCKED;
+let currentSlotId = "";
+let currentParticipantId = "";
 
-const participantsData = (function (slotsData) {
-  // Generates the map of the participants from that of the slots
-  const data = new Map();
-  Array.from(slotsData.entries()).forEach(function (slotEntry) {
-    const slotId = slotEntry[0];
-    const participants = slotEntry[1];
-    participants.forEach(function (participantId) {
-      if (!data.has(participantId)) {
-        data.set(participantId, new Set([slotId]));
-      } else {
-        data.get(participantId).add(slotId);
-      }
-    });
-  });
-  return data;
-})(slotsData);
+const isLocked = () => {
+  return lockedState !== UNLOCKED;
+};
+
+const participantsLocked = () => {
+  return lockedState === LOCK_PARTICIPANTS;
+};
+
+const slotsLocked = () => {
+  return lockedState === LOCK_SLOTS;
+};
+
+const lockList = (value) => {
+  lockedState = value;
+};
+
+const unlock = () => {
+  lockedState = UNLOCKED;
+};
 
 // Running...
 //---------------------------------------------------------------------
@@ -42,21 +54,28 @@ $(function () {
   // Propagates data to view
   //-----------------------
 
-  $(".participant").each(function () {
-    // Fills the number of slots reserved by each participant
-    const $participant = $(this);
-    const participantId = $participant.attr("data-participant-id");
-    const numberOfslots = participantsData.get(participantId);
-    const counter = numberOfslots ? numberOfslots.size : 0;
-    $participant.find(".participant-slots_count").text(counter);
-  });
-  $(".slot").each(function () {
-    // Fills the number of slots reserved by each participant
-    const $slot = $(this);
-    const slotId = $slot.attr("data-slot-id");
-    const numberOfslots = slotsData.get(slotId);
-    const counter = numberOfslots ? numberOfslots.size : 0;
-    $slot.find(".slot-participants_count").text(counter);
+  const refreshView = function () {
+    $(".participant").each(function () {
+      // Fills the number of slots reserved by each participant
+      const $participant = $(this);
+      const participantId = $participant.attr("data-item-id");
+      const numberOfslots =
+        slotsManager.getSlotsByParticipant(participantId).size;
+      const counter = numberOfslots || 0;
+      $participant.find(".item_count").text(counter);
+    });
+    $(".slot").each(function () {
+      // Fills the number of slots reserved by each participant
+      const $slot = $(this);
+      const slotId = $slot.attr("data-item-id");
+      const numberOfslots = slotsManager.getParticipantsBySlot(slotId).size;
+      const counter = numberOfslots || 0;
+      $slot.find(".item_count").text(counter);
+    });
+  };
+  refreshView();
+  slotsManager.onChange(function () {
+    refreshView();
   });
 
   // Prepares the shape
@@ -86,23 +105,21 @@ $(function () {
 
   // Handles communication between tables
   //--------------------------------------
-  const displaySlotsOfParticipant = function (participant$) {
-    const participantId = participant$.attr("data-participant-id");
 
+  const displaySlotsOfParticipant = function (participantId) {
     // It switches the slot view:
     $(".slot").each(function () {
       const $slot = $(this);
-      const $slotAction = $slot.find(".slot-participants--actions");
-      const $slotCounter = $slot.find(".slot-participants--counter");
-      const slotId = $slot.attr("data-slot-id");
-      const isOccupiedByParticipant = slotsData.get(slotId).has(participantId);
+      const $slotAction = $slot.find(".item-actions");
+      const $slotCounter = $slot.find(".item-counter");
+      const slotId = $slot.attr("data-item-id");
+      const isOccupiedByParticipant = slotsManager.hasParticipant(
+        slotId,
+        participantId
+      );
 
       // Enables/Disables the checkbox
-      if (isOccupiedByParticipant) {
-        $slotAction.find("input").attr("checked", "checked");
-      } else {
-        $slotAction.find("input").removeAttr("checked");
-      }
+      $slotAction.find("input")[0].checked = isOccupiedByParticipant;
 
       // Toggles the slot view
       $slotCounter.hide();
@@ -110,30 +127,21 @@ $(function () {
     });
   };
 
-  const displayParticipantsOfSlot = function (slot$) {
-    const slotId = slot$.attr("data-slot-id");
-
+  const displayParticipantsOfSlot = function (slotId) {
     // It switches the participants view:
     $(".participant").each(function () {
       const $participant = $(this);
 
-      const $participantAction = $participant.find(
-        ".participant-slots--actions"
+      const $participantAction = $participant.find(".item-actions");
+      const $participantCounter = $participant.find(".item-counter");
+      const participantId = $participant.attr("data-item-id");
+      const isParticipantOfSlot = slotsManager.hasParticipant(
+        slotId,
+        participantId
       );
-      const $participantCounter = $participant.find(
-        ".participant-slots--counter"
-      );
-      const participantId = $participant.attr("data-participant-id");
-      const isParticipantOfSlot = participantsData
-        .get(participantId)
-        .has(slotId);
 
       // Enables/Disables the checkbox
-      if (isParticipantOfSlot) {
-        $participantAction.find("input").attr("checked", "checked");
-      } else {
-        $participantAction.find("input").removeAttr("checked");
-      }
+      $participantAction.find("input")[0].checked = isParticipantOfSlot;
 
       // Toggles the slot view
       $participantCounter.hide();
@@ -145,37 +153,106 @@ $(function () {
 
   // Toggles the slots table with data of a single participant on hover
   $participantsList
-    .on("mouseenter", ".participant", function () {
+    .on("mouseenter", ".participant", function (event) {
+      if (slotsLocked()) {
+        return;
+      }
+
       // Displays the slots of the participant.
       const $participant = $(this);
-      displaySlotsOfParticipant($participant);
+      currentParticipantId = $participant.attr("data-item-id");
+      $participantsList.find(".hovered").removeClass("hovered");
+      $participant.addClass("hovered");
+      displaySlotsOfParticipant(currentParticipantId);
 
       // Draws the svg divider.
       $(shapeDividerElement).show();
       displayDividerShape($participant);
     })
     .on("mouseleave", ".participant", function () {
+      const $participant = $(this);
+      if (isLocked()) return;
       // Resets the view.
-      $(".slot-participants--actions").hide();
-      $(".slot-participants--counter").show();
+      $participant.removeClass("hovered");
+      currentParticipantId = "";
+      $(".item-actions").hide();
+      $(".item-counter").show();
       $(shapeDividerElement).hide();
     });
 
   // Toggles the participants table with data of a single slot on hover
   $slotsList
-    .on("mouseenter", ".slot", function () {
+    .on("mouseenter", ".slot", function (event) {
+      if (participantsLocked()) {
+        return;
+      }
+
       // Displays the participants of the slot:
       const $slot = $(this);
-      displayParticipantsOfSlot($slot);
+      currentSlotId = $slot.attr("data-item-id");
+
+      $slotsList.find(".hovered").removeClass("hovered");
+      $slot.addClass("hovered");
+      displayParticipantsOfSlot(currentSlotId);
 
       // Draws the svg divider:
       $(shapeDividerElement).show();
       displayDividerShape($slot);
     })
     .on("mouseleave", ".slot", function () {
+      const $slot = $(this);
+      if (isLocked()) return;
       // Resets the view.
-      $(".participant-slots--actions").hide();
-      $(".participant-slots--counter").show();
+      $slot.removeClass("hovered");
+      currentSlotId = "";
+      $(".item-actions").hide();
+      $(".item-counter").show();
       $(shapeDividerElement).hide();
     });
+
+  // Edits the slots and participants
+  $participantsList.on("click", function (event) {
+    if (!isLocked()) {
+      lockList(LOCK_PARTICIPANTS);
+    }
+  });
+  $participantsList.on("change", "input[type=checkbox]", function (event) {
+    const isChecked = event.target.checked;
+    const value = $(this).val();
+    if (isChecked) {
+      slotsManager.subscribe(currentSlotId, value);
+    } else {
+      slotsManager.unsubscribe(currentSlotId, value);
+    }
+    event.preventDefault();
+    event.stopImmediatePropagation();
+  });
+
+  $slotsList.on("click", function (event) {
+    if (!isLocked()) {
+      lockList(LOCK_SLOTS);
+    }
+  });
+
+  $slotsList.on("change", "input[type=checkbox]", function (event) {
+    const isChecked = event.target.checked;
+    const value = $(this).val();
+    if (isChecked) {
+      slotsManager.subscribe(value, currentParticipantId);
+    } else {
+      slotsManager.unsubscribe(value, currentParticipantId);
+    }
+    event.preventDefault();
+    event.stopImmediatePropagation();
+  });
+
+  $(".reset-area, .divider").on("click", function (event) {
+    currentSlotId = "";
+    currentParticipantId = "";
+    $(".item-actions").hide();
+    $(".item-counter").show();
+    $(".hovered").removeClass("hovered");
+    $(shapeDividerElement).hide();
+    unlock();
+  });
 });
