@@ -4,12 +4,17 @@
 export class SlotsManager {
   #data = new Map();
   #listeners = [];
+  #participants = new Set();
 
   /**
    * @param {Map<string, Set<string>>} slots
    */
   constructor(slots) {
     this.#data = slots;
+    const pmk = this.getParticipantsMap().keys();
+    for (const participantId of pmk) {
+      this.#participants.add(participantId);
+    }
   }
 
   /** Subscribes a participant to a slot.
@@ -19,6 +24,22 @@ export class SlotsManager {
   subscribe(slotId, participantId) {
     if (this.#data.has(slotId) && !this.#data.get(slotId).has(participantId)) {
       this.#data.get(slotId).add(participantId);
+      this.#emit();
+    }
+  }
+
+  subscribeParticipantToAllSlots(participantId) {
+    this.#data.forEach((value) => {
+      if (!value.has(participantId)) {
+        value.add(participantId);
+      }
+    });
+    this.#emit();
+  }
+
+  subscribeAllParticipantsToSlot(slotId) {
+    if (this.#data.has(slotId)) {
+      this.#data.set(slotId, this.#participants);
     }
     this.#emit();
   }
@@ -30,8 +51,8 @@ export class SlotsManager {
   unsubscribe(slotId, participantId) {
     if (this.hasParticipant(slotId, participantId)) {
       this.#data.get(slotId).delete(participantId);
+      this.#emit();
     }
-    this.#emit();
   }
 
   /** Checks if a participant is registered to a slot.
