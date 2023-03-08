@@ -44,6 +44,24 @@ const unlock = () => {
   lockedState = UNLOCKED;
 };
 
+const tplSelectAllSlots = (() => {
+  const div = document.createElement("div");
+  div.classList.add("select-all");
+  div.classList.add("inline-block");
+  div.classList.add("px-1");
+  div.classList.add("cursor-pointer");
+  div.classList.add("hover:text-sky-800");
+  div.classList.add("hover:bg-sky-100");
+  div.textContent = "Marquer présent à tout";
+  return div;
+})();
+
+const tplSelectAllParticipants = (() => {
+  const div = tplSelectAllSlots.cloneNode(true);
+  div.textContent = "Marquer tous les participants présents";
+  return div;
+})();
+
 // Running...
 //---------------------------------------------------------------------
 
@@ -161,6 +179,19 @@ $(function () {
       // Displays the slots of the participant.
       const $participant = $(this);
       currentParticipantId = $participant.attr("data-item-id");
+
+      // Select all slots:
+      const $counter = $participant.find(".item-counter");
+      $counter.hide();
+      $counter.parent().append(tplSelectAllSlots.cloneNode(true));
+      $participant.on("click", ".select-all", function (event) {
+        slotsManager.subscribeParticipantToAllSlots(currentParticipantId);
+        displaySlotsOfParticipant(currentParticipantId);
+        event.preventDefault();
+        event.stopImmediatePropagation();
+      });
+
+      // Applies the hovered effect:
       $participantsList.find(".hovered").removeClass("hovered");
       $participant.addClass("hovered");
       displaySlotsOfParticipant(currentParticipantId);
@@ -170,13 +201,21 @@ $(function () {
       displayDividerShape($participant);
     })
     .on("mouseleave", ".participant", function () {
-      const $participant = $(this);
-      if (isLocked()) return;
       // Resets the view.
-      $participant.removeClass("hovered");
-      currentParticipantId = "";
+      debugger;
+      const $participant = $(this);
+      // If the select-all button is present, remove it
+      const $btn = $participant.find(".select-all");
+      if ($btn.length > 0) {
+        $btn.remove();
+        $participant.find(".item-counter").show();
+      }
+      // If the view is not locked, resets all the rows
+      if (isLocked()) return;
       $(".item-actions").hide();
       $(".item-counter").show();
+      $participant.removeClass("hovered");
+      currentParticipantId = "";
       $(shapeDividerElement).hide();
     });
 
@@ -187,10 +226,21 @@ $(function () {
         return;
       }
 
-      // Displays the participants of the slot:
       const $slot = $(this);
       currentSlotId = $slot.attr("data-item-id");
 
+      // Select all participants:
+      const $counter = $slot.find(".item-counter");
+      $counter.hide();
+      $counter.parent().append(tplSelectAllParticipants.cloneNode(true));
+      $slot.on("click", ".select-all", function (event) {
+        slotsManager.subscribeAllParticipantsToSlot(currentSlotId);
+        displayParticipantsOfSlot(currentSlotId);
+        event.preventDefault();
+        event.stopImmediatePropagation();
+      });
+
+      // Displays the participants of the slot:
       $slotsList.find(".hovered").removeClass("hovered");
       $slot.addClass("hovered");
       displayParticipantsOfSlot(currentSlotId);
@@ -200,13 +250,20 @@ $(function () {
       displayDividerShape($slot);
     })
     .on("mouseleave", ".slot", function () {
-      const $slot = $(this);
-      if (isLocked()) return;
       // Resets the view.
-      $slot.removeClass("hovered");
-      currentSlotId = "";
+      const $slot = $(this);
+      // If the select-all button is present, remove it
+      const $btn = $slot.find(".select-all");
+      if ($btn.length > 0) {
+        $btn.remove();
+        $slot.find(".item-counter").show();
+      }
+      // If the view is not locked, resets all the rows
+      if (isLocked()) return;
       $(".item-actions").hide();
       $(".item-counter").show();
+      $slot.removeClass("hovered");
+      currentSlotId = "";
       $(shapeDividerElement).hide();
     });
 
